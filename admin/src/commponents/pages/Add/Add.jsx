@@ -1,108 +1,158 @@
-import React, { useState } from 'react'
-import './Add.css'
-import { assets } from '../../../assets/assets'
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Add = () => {
-  const[data,setData] = useState({
-    name:"",
-    description:'',
-    price:''
-  })
-
-  const[user,setUser] = useState()
-
-  const[valueInput,setValueInput] = useState({
-    username:"",
-    password:""
-  })
+  const [image, setImage] = useState();
+  const [data, setData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    category: 0
+  });
 
   const handleChangeData = (e) => {
-    const name = e.target.name
-    const value = e.target.value
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+  };
 
-    // const { name, value } = e.target;
-    // console.log('name',name);
-    // console.log('value',value);
-    // setData({...data, [name]: value})
-    // setData({...data,[name]:value})
-    // console.log(data);
-    setValueInput({...valueInput,[name]:value});
-  }
-  console.log(valueInput);
-  const url = `http://localhost:4000/api/food/add`
-
-  const onSubmitAdd = async (e) => {
-    e.preventDefault()
-    console.log(data);
-    const response = await axios.post(url, data)
-    console.log(response);
-    
-  }
-
-  const onLogin = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    const url = `https://jsonplaceholder.typicode.com/users`
-    const response = await axios.get(url)
-    console.log(response);
-    if (response.data.success) {
-      setUser(response.data)
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("category", data.category);
+
+    const url = `http://localhost:4000/api/food/add`;
+    const response = await axios.post(url, formData);
+    
+    if(response.data.statusCode === 200){
+      toast.success(response.data.message)
+    } else {
+      toast.error(response.data.message)
     }
-  }
+  };
 
   return (
-    <div className='add'>
-      <form className='flex-col' onSubmit={onSubmitAdd}>
-        {/* <div className="add-img-upload flex-col">
-            <p>Upload Image</p>
-            <label htmlFor="image">
-                <img src="" alt="" />
-            </label>
-            <input type="file" id='image' hidden required />
-        </div> */}
-        <div className="add-product-name flex-col">
-            <p>Product name</p>
-            <input onChange={(e) => handleChangeData(e)} type="text" name='name' placeholder='Type here' />
+    <form className="flex-col mx-10" onSubmit={onSubmit}>
+      <div className="mt-5">
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Product name
+        </label>
+        <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+          <input
+            type="text"
+            onChange={(e) => handleChangeData(e)}
+            name="name"
+            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+          />
         </div>
-        <div className="add-product-description flex-col">
-        <p>Product description</p>
-        <textarea onChange={e => handleChangeData(e)} name="description" rows="6" placeholder='Write content here' required></textarea>
-        </div>
-        <div className="add-category-price">
-            {/* <div className="add-category flex-col">
-                <p>Product category</p>
-                <select name="category" >
-                    <option value="Salad">Salad</option>
-                    <option value="Rolls">Rolls</option>
-                    <option value="Deserts">Deserts</option>
-                    <option value="Sandwich">Sandwich</option>
-                    <option value="Cake">Cake</option>
-                    <option value="Pure Veg">Pure Veg</option>
-                    <option value="Pasta">Pasta</option>
-                    <option value="Noodles">Noodles</option>
-                </select>
-            </div> */}
-            <div className="add-price flex-col">
-                <p>Product price</p>
-                <input onChange={e => handleChangeData(e)} type="Number" name='price' placeholder='$20' />
+      </div>
+      <div className="col-span-full">
+        <label
+          htmlFor="cover-photo"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Product Photo
+        </label>
+        <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+          <div className="text-center">
+            <div className="mt-4 flex text-sm leading-6 text-gray-600">
+              <label
+                htmlFor="file-upload"
+                className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+              >
+                <span>Upload a file</span>
+                <input
+                  id="file-upload"
+                  name="image"
+                  type="file"
+                  className="sr-only"
+                  onChange={(e) => setImage(e.target.files[0])}
+                />
+              </label>
+              <p className="pl-1">or drag and drop</p>
             </div>
+            <p className="text-xs leading-5 text-gray-600">
+              PNG, JPG, GIF up to 10MB
+            </p>
+          </div>
         </div>
-        <button type='submit' className='add-btn'>Add Product</button>
-      </form>
-      <p>User Name</p>
-      <input type="text" name='username' onChange={(e)=> handleChangeData(e)}/>
-      <p>PassWord</p>
-      <input type="text" name='password' onChange={(e)=> handleChangeData(e)}/>
-      <button onClick={onLogin}>Đăng Nhập</button>
-      <div>
-        UserName: {user?.username}
       </div>
-      <div>
-        PassWord: {user?.name}
+      <div className="mt-5">
+        <label
+          htmlFor="username"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Product description
+        </label>
+        <div className="mt-2">
+          <textarea
+            id="description"
+            name="description"
+            rows={3}
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            onChange={(e) => handleChangeData(e)}
+          />
+        </div>
       </div>
-    </div>
-    
-  )
-}
+      <div className="mt-5">
+        <label
+          htmlFor="username"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Product price
+        </label>
+        <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+          <input
+            type="number"
+            onChange={(e) => handleChangeData(e)}
+            name="price"
+            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+          />
+        </div>
+      </div>
+      <div className="mt-5">
+        <label
+          htmlFor="country"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Category
+        </label>
+        <div className="mt-2">
+          <select
+            onChange={(e) => handleChangeData(e)}
+            id="category"
+            name="category"
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+          >
+            <option value={0}>Iphone</option>
+            <option value={1}>Samsung</option>
+            <option value={2}>Oppo</option>
+          </select>
+        </div>
+      </div>
+      <div className="mt-5 flex items-center justify-end gap-x-6">
+        <button
+          type="button"
+          className="text-sm font-semibold leading-6 text-gray-900"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Save
+        </button>
+      </div>
+    </form>
+  );
+};
 
-export default Add
+export default Add;

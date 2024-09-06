@@ -6,26 +6,23 @@ import fs  from 'fs'
 
 
 const addFood = async(req,res) => {
-    console.log(req);
-    res.json({success:true,message:"Food Added"})
+    const { name, description, price, category } = req.body
+    let image_filename = `${req.file.filename}`;
 
-    // let image_filename = `${req.file.filename}`;
+    const product = new foodModel({
+        name:name,
+        description:description,
+        price:price,
+        category:category,
+        image:image_filename
+    })
 
-    // const food = new foodModel({
-    //     name:req.body.name,
-    //     description:req.body.description,
-    //     price:req.body.price,
-    //     category:req.body.category,
-    //     image:image_filename
-    // })
-
-    // try {
-    //     await food.save();
-    //     res.json({success:true,message:"Food Added"})
-    // } catch (error) {
-    //     console.log(error)
-    //     res.json({success:false,message:"Error"})
-    // }
+    try {
+        await product.save();
+        res.json({success:true, statusCode: 200, message:"Product Added"})
+    } catch (error) {
+        res.json({success:false,statusCode: 400, message:"Product Add Failed"})
+    }
 }
 
 // all food list
