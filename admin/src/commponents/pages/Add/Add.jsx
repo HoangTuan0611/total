@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -8,7 +8,7 @@ const Add = () => {
     name: "",
     description: "",
     price: "",
-    category: 0
+    category: 0,
   });
 
   const handleChangeData = (e) => {
@@ -27,11 +27,20 @@ const Add = () => {
 
     const url = `http://localhost:4000/api/food/add`;
     const response = await axios.post(url, formData);
-    
-    if(response.data.statusCode === 200){
-      toast.success(response.data.message)
+
+    if (response.data.statusCode === 200) {
+      toast.success(response.data.message);
+
+      // Đặt lại giá trị mặc định cho form sau khi thành công
+      setData({
+        name: "",
+        description: "",
+        price: "",
+        category: 0,
+      });
+      setImage(null); // Đặt lại hình ảnh
     } else {
-      toast.error(response.data.message)
+      toast.error(response.data.message);
     }
   };
 
@@ -62,6 +71,14 @@ const Add = () => {
         </label>
         <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
           <div className="text-center">
+            {/* Display the image preview if an image is selected */}
+            {image && (
+              <img
+                src={URL.createObjectURL(image)} // Create a temporary URL for the image
+                alt="Product Preview"
+                className="w-32 h-32 object-cover rounded-md mb-4 mx-auto"
+              />
+            )}
             <div className="mt-4 flex text-sm leading-6 text-gray-600">
               <label
                 htmlFor="file-upload"
@@ -73,7 +90,7 @@ const Add = () => {
                   name="image"
                   type="file"
                   className="sr-only"
-                  onChange={(e) => setImage(e.target.files[0])}
+                  onChange={(e) => setImage(e.target.files[0])} // Update image state
                 />
               </label>
               <p className="pl-1">or drag and drop</p>

@@ -1,36 +1,69 @@
 import React, { useState } from "react";
 import "./ExploreMenu.css";
 const ExploreMenu = ({ category, setCategory }) => {
-  const [menuList, setMenuList] = useState([]);
+  const categories = [
+    { name: "iPhone", image: "http://localhost:4000/images/1725682582197iphone-15-pro.jpg" },
+    { name: "Samsung", image: "http://localhost:4000/images/1725682612010samsung-galaxy-z-fold6-acv-13.jpg" },
+    { name: "Oppo", image: "http://localhost:4000/images/1725686583104oppo-reno11-f-5g-1-1020x570.jpg" },
+    { name: "Xiaomi", image: "http://localhost:4000/images/1725682582197iphone-15-pro.jpg" },
+    { name: "Google", image: "http://localhost:4000/images/1725682612010samsung-galaxy-z-fold6-acv-13.jpg" },
+    { name: "Nokia", image: "http://localhost:4000/images/1725686583104oppo-reno11-f-5g-1-1020x570.jpg" },
+  ];
   return (
-    <div className="explore-menu" id="explore-menu">
-      <h1>Explore our menu</h1>
-      <p className="explore-menu-text">
-        Choose from a diverse menu featuring a delectable array of dishes.
-      </p>
-      <div className="explore-menu-list">
-        {menuList.map((item, index) => {
-          return (
+    <div>
+      <section className="flex flex-col md:flex-row items-center justify-between p-8 md:p-16 bg-white">
+        {/* Text Content */}
+        <div className="flex-1 space-y-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-800">
+            Discover Your Next Smartphone
+          </h1>
+          <p className="text-gray-600 md:w-3/4">
+            Explore our wide range of smartphones with cutting-edge technology,
+            stunning designs, and exceptional performance. Whether you are
+            looking for the latest flagship model or a budget-friendly device,
+            we have something for everyone.
+          </p>
+          <button className="mt-4 px-6 py-2 text-white bg-red-600 rounded-full hover:bg-red-700">
+            Shop Now
+          </button>
+        </div>
+        {/* Image */}
+        <div className="flex-1 mt-8 md:mt-0">
+          <img
+            src="http://localhost:4000/images/explore_menu.jpg"
+            alt="Food Dish"
+            className="w-full rounded-xl shadow-lg"
+          />
+        </div>
+      </section>
+
+      {/* Categories Section */}
+      <section className="p-8 shadow-md">
+        <h2 className="text-3xl font-bold text-gray-800 mb-4">
+          Explore Our Shop
+        </h2>
+        <p className="text-gray-600 mb-8">
+          Browse through our various categories to find the perfect smartphone
+          that suits your needs.
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4">
+          {categories.map((cat) => (
             <div
-              onClick={() =>
-                setCategory((prev) =>
-                  prev === item.menu_name ? "All" : item.menu_name
-                )
-              }
-              key={index}
-              className="explore-menu-list-item"
+              key={cat.name}
+              className="flex flex-col items-center bg-white p-4 rounded-lg"
             >
               <img
-                className={category === item.menu_name ? "active" : ""}
-                src={item.menu_image}
-                alt=""
+                src={cat.image}
+                alt={cat.name}
+                className="w-32 h-32 object-cover rounded-full mb-4"
               />
-              <p>{item.menu_name}</p>
+              <h3 className="text-xl font-semibold text-gray-700">
+                {cat.name}
+              </h3>
             </div>
-          );
-        })}
-      </div>
-      <hr />
+          ))}
+        </div>
+      </section>
     </div>
   );
 };
