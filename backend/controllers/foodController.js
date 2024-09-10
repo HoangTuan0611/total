@@ -5,7 +5,7 @@ import fs from "fs";
 // add product item
 
 const addProduct = async (req, res) => {
-  const { name, description, price, category } = req.body;
+  const { name, description, price, category, subcategory } = req.body;
   let image_filename = req.file ? req.file.filename : null; // Nếu không có file thì gán giá trị null
 
   const product = new productModel({
@@ -13,6 +13,7 @@ const addProduct = async (req, res) => {
     description: description,
     price: price,
     category: category,
+    subcategory: subcategory,
     image: image_filename,
   });
 
@@ -31,13 +32,85 @@ const addProduct = async (req, res) => {
 // all product list
 const listProduct = async (req, res) => {
   try {
-    const products = await productModel.find({});
+    const { category, search } = req.query; // Get query parameters for category and search
+    console.log(category);
+    // Build query object dynamically based on query parameters
+    let query = {};
+
+    if (category && category !== 'All') {
+      query.category = category; // Filter by category if provided
+    }
+
+    if (search) {
+      query.name = { $regex: search, $options: "i" }; // Search by product name (case-insensitive)
+    }
+
+    // Fetch products based on the query object
+    const products = await productModel.find(query);
+
     res.json({ success: true, data: products });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: "Error" });
   }
 };
+
+const listCategory = async (req, res) => {
+  try {
+    // Use distinct to get unique category values from the products collection
+    const categories = await productModel.distinct("category");
+    res.json({ success: true, data: categories });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "Error" });
+  }
+};
+
+const listCategoryWithSubcategory = async (req, res) => {
+  try {
+    const categories = await productModel.aggregate([
+      {
+        $group: {
+          _id: "$category",
+          subcategories: { $addToSet: "$subcategory" }, // Add unique subcategories
+        },
+      },
+    ]);
+
+    res.json({ success: true, data: categories });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "Error" });
+  }
+};
+
+const listSubcategoryByCategory = async (req, res) => {
+  try {
+    const category = req.params.category;
+    console.log(category);
+    const subcategories = await productModel.aggregate([
+      {
+        $match: { category: category },
+      },
+      {
+        $group: {
+          _id: "$category",
+          subcategories: { $addToSet: "$subcategory" },
+        },
+      },
+    ]);
+
+    if (subcategories.length === 0) {
+      return res.json({ success: true, data: [] });
+    }
+
+    res.json({ success: true, data: subcategories[0].subcategories });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "Error" });
+  }
+};
+
 //remove product item
 const removeProduct = async (req, res) => {
   try {
@@ -58,4 +131,11 @@ const removeProduct = async (req, res) => {
   }
 };
 
-export { addProduct, listProduct, removeProduct };
+export {
+  addProduct,
+  listProduct,
+  listCategory,
+  removeProduct,
+  listCategoryWithSubcategory,
+  listSubcategoryByCategory,
+};

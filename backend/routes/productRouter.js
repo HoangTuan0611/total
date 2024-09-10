@@ -3,6 +3,9 @@ import {
   addProduct,
   listProduct,
   removeProduct,
+  listCategory,
+  listCategoryWithSubcategory,
+  listSubcategoryByCategory,
 } from "../controllers/foodController.js";
 import multer from "multer";
 
@@ -21,6 +24,8 @@ const upload = multer({ storage: storage });
 
 productRouter.post("/add", upload.single("image"), addProduct);
 productRouter.get("/list", listProduct);
+productRouter.get("/listcategory", listCategory);
+productRouter.get("/subcategory/:category", listSubcategoryByCategory);
 productRouter.delete("/remove/:id", removeProduct);
 
 export default productRouter;

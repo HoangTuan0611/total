@@ -9,21 +9,69 @@ const Add = () => {
     description: "",
     price: "",
     category: 0,
+    subcategory: "",
   });
+  const [defaultSubcategory, setDefaultSubcategory] = useState();
+  const [selectedSubcategory, setSelectedSubcategory] = useState(""); // State to store selected subcategory
+  const [customSubcategory, setCustomSubcategory] = useState(""); // State for custom input
+
+  useEffect(() => {
+    getSubcategory();
+  }, []);
+
+  const getSubcategory = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/food/subcategory/0`
+      );
+
+      if (response.data.success) {
+        console.log(response.data);
+        setDefaultSubcategory(response.data.data); // Handle the subcategories data
+      } else {
+        console.error("Error fetching subcategories");
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
 
   const handleChangeData = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
   };
 
+  const handleChangeCategory = async (e) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+
+    // call api to get subcategory
+    const category = e.target.value;
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/food/subcategory/${category}`
+      );
+
+      if (response.data.success) {
+        setDefaultSubcategory(response.data.data); // Handle the subcategories data
+      } else {
+        console.error("Error fetching subcategories");
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
+    const finalSubcategory = customSubcategory || selectedSubcategory;
     const formData = new FormData();
     formData.append("image", image);
     formData.append("name", data.name);
     formData.append("description", data.description);
     formData.append("price", data.price);
     formData.append("category", data.category);
+    formData.append("subcategory", finalSubcategory);
 
     const url = `http://localhost:4000/api/food/add`;
     const response = await axios.post(url, formData);
@@ -37,11 +85,25 @@ const Add = () => {
         description: "",
         price: "",
         category: 0,
+        subcategory: "",
       });
+      setCustomSubcategory("")
+      setSelectedSubcategory("")
+      setDefaultSubcategory("")
       setImage(null); // Đặt lại hình ảnh
     } else {
       toast.error(response.data.message);
     }
+  };
+
+  const handleChangeSelect = (e) => {
+    setSelectedSubcategory(e.target.value); // Update the selected subcategory
+    setCustomSubcategory(""); // Clear custom input if a subcategory is selected
+  };
+
+  const handleChangeInput = (e) => {
+    setCustomSubcategory(e.target.value); // Update the custom subcategory
+    setSelectedSubcategory(""); // Clear selected subcategory if custom input is being entered
   };
 
   return (
@@ -143,15 +205,57 @@ const Add = () => {
         </label>
         <div className="mt-2">
           <select
-            onChange={(e) => handleChangeData(e)}
+            onChange={(e) => handleChangeCategory(e)}
             id="category"
             name="category"
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
           >
-            <option value={0}>Iphone</option>
-            <option value={1}>Samsung</option>
-            <option value={2}>Oppo</option>
+            <option value={0}>Phone</option>
+            <option value={1}>Laptop</option>
           </select>
+        </div>
+      </div>
+      {/* 1234 */}
+      <div className="mt-2">
+        <label
+          htmlFor="subcategory"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Select or Enter Subcategory
+        </label>
+
+        {/* Select Dropdown */}
+        <select
+          id="subcategory"
+          name="subcategory"
+          value={selectedSubcategory}
+          onChange={handleChangeSelect}
+          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+          disabled={customSubcategory.length > 0} // Disable select if custom input is being entered
+        >
+          {defaultSubcategory?.length > 0 ? (
+            defaultSubcategory?.map((subcategory, index) => (
+              <option key={index} value={subcategory}>
+                {subcategory}
+              </option>
+            ))
+          ) : (
+            <option value="" disabled>
+              No subcategories available
+            </option>
+          )}
+        </select>
+
+        {/* Input for custom subcategory */}
+        <div className="mt-3">
+          <input
+            type="text"
+            value={customSubcategory}
+            onChange={handleChangeInput}
+            placeholder="Or enter a new subcategory"
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+            disabled={selectedSubcategory.length > 0} // Disable input if subcategory is selected from dropdown
+          />
         </div>
       </div>
       <div className="mt-5 flex items-center justify-end gap-x-6">
