@@ -4,9 +4,9 @@ import {
   listProduct,
   removeProduct,
   listCategory,
-  listCategoryWithSubcategory,
   listSubcategoryByCategory,
-} from "../controllers/foodController.js";
+} from "../controllers/productController.js";
+
 import multer from "multer";
 
 const productRouter = express.Router();

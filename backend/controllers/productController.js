@@ -1,5 +1,4 @@
-import { log } from "console";
-import productModel from "../models/food-Model.js";
+import productModel from "../models/productModel.js";
 import fs from "fs";
 
 // add product item
@@ -37,7 +36,7 @@ const listProduct = async (req, res) => {
     // Build query object dynamically based on query parameters
     let query = {};
 
-    if (category && category !== 'All') {
+    if (category && category !== "All") {
       query.category = category; // Filter by category if provided
     }
 

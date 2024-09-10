@@ -2,8 +2,8 @@ import express from 'express'
 import cors from "cors"
 import { connectDB } from './config/db.js'
 import productRouter from './routes/productRouter.js'
-
-
+import userRouter from './routes/userRouter.js'
+import 'dotenv/config';
 
 // app config
 const app = express()
@@ -16,10 +16,12 @@ app.use(cors())
 // db connection
 connectDB();
 
-//api endpoints
-app.use("/api/food", productRouter)
-
+//api endpoints for product
+app.use("/api/product", productRouter)
 app.use("/images",express.static('uploads'))
+
+//api endpoints for user
+app.use("/api/user", userRouter)
 
 app.get("/",(req,res)=>{
     res.send("API Working")
@@ -28,9 +30,3 @@ app.get("/",(req,res)=>{
 app.listen(port,()=>{
     console.log(`Server Started on http://localhost:${port}`)
 })
-
-app.post("/login",(req,res)=>{
-    console.log(req.body);
-    res.send({success:true,username:"thanhphat",password:"123"})
-})
-//mongodb+srv://greatstack:33858627@cluster0.yoy4s.mongodb.net/?
