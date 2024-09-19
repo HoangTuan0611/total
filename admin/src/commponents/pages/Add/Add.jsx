@@ -22,7 +22,7 @@ const Add = () => {
   const getSubcategory = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/food/subcategory/0`
+        `http://localhost:4000/api/product/subcategory/0`
       );
 
       if (response.data.success) {
@@ -49,7 +49,7 @@ const Add = () => {
     const category = e.target.value;
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/food/subcategory/${category}`
+        `http://localhost:4000/api/product/subcategory/${category}`
       );
 
       if (response.data.success) {
@@ -73,7 +73,7 @@ const Add = () => {
     formData.append("category", data.category);
     formData.append("subcategory", finalSubcategory);
 
-    const url = `http://localhost:4000/api/food/add`;
+    const url = `http://localhost:4000/api/product/add`;
     const response = await axios.post(url, formData);
 
     if (response.data.statusCode === 200) {

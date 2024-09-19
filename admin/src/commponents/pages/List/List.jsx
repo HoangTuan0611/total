@@ -7,13 +7,20 @@ const List = () => {
   const [categories, setCategories] = useState(["All"]); // Example categories
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
-  const TABLE_HEAD = ["Name","Image", "Description", "Price", "Category", "", ""];
+  const TABLE_HEAD = [
+    "Name",
+    "Image",
+    "Description",
+    "Price",
+    "Category",
+    "",
+    "",
+  ];
   const defaultImage =
     "https://images.unsplash.com/photo-1519223400710-6da9e1b777ea?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
-
   useEffect(() => {
-    getAllCategories()
+    getAllCategories();
   }, []);
 
   useEffect(() => {
@@ -21,17 +28,17 @@ const List = () => {
   }, [selectedCategory, searchTerm]);
 
   const getAllCategories = async () => {
-    const url = `http://localhost:4000/api/food/listcategory`
+    const url = `http://localhost:4000/api/product/listcategory`;
     const response = await axios.get(url);
     setCategories(["All", ...response.data.data]);
-  }
+  };
 
   const getListProducts = async () => {
     try {
       const categoryFilter =
         selectedCategory !== "All" ? `category=${selectedCategory}` : "";
       const searchFilter = searchTerm ? `&search=${searchTerm}` : "";
-      const url = `http://localhost:4000/api/food/list?${categoryFilter}${searchFilter}`;
+      const url = `http://localhost:4000/api/product/list?${categoryFilter}${searchFilter}`;
       const response = await axios.get(url);
       setListProduct(response.data.data);
     } catch (error) {
@@ -41,7 +48,7 @@ const List = () => {
 
   const handleDelete = async (id) => {
     try {
-      const url = `http://localhost:4000/api/food/remove/${id}`;
+      const url = `http://localhost:4000/api/product/remove/${id}`;
       const response = await axios.delete(url);
       setListProduct((prevProducts) =>
         prevProducts.filter((product) => product._id !== id)
@@ -63,7 +70,7 @@ const List = () => {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
-  
+
   return (
     <div className="container mx-auto px-4 sm:px-8">
       <div className="py-8">
@@ -85,7 +92,7 @@ const List = () => {
           >
             {categories.map((category, index) => (
               <option key={index} value={category}>
-                {category == 'All' ? 'All' : category == 0 ? 'Phone': 'Laptop'}
+                {category == "All" ? "All" : category == 0 ? "Phone" : "Laptop"}
               </option>
             ))}
           </select>
@@ -135,7 +142,12 @@ const List = () => {
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                         <p className="text-gray-900 whitespace-no-wrap">
-                          {product.price ? product.price.toFixed(2) : "N/A"} VND
+                          {product.price
+                            ? new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(product.price)
+                            : "N/A"}
                         </p>
                       </td>
                       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

@@ -3,7 +3,8 @@ import { StoreContext } from "../../context/StoreContext";
 
 const ProductItem = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
-
+  const { addToCart } = useContext(StoreContext)
+  
   // Xử lý tăng số lượng
   const increaseQuantity = () =>
     setQuantity((prevQuantity) => prevQuantity + 1);
@@ -14,11 +15,12 @@ const ProductItem = ({ product }) => {
   };
 
   // Xử lý thêm vào giỏ hàng
-  const addToCart = () => {
-    // Đây là nơi bạn sẽ xử lý việc thêm sản phẩm vào giỏ hàng.
-    // Bạn có thể gọi một hàm từ context hoặc redux để quản lý giỏ hàng.
-    console.log(`Added ${quantity} of ${product.name} to cart`);
-  };
+  // const addToCart = () => {
+  //   // Đây là nơi bạn sẽ xử lý việc thêm sản phẩm vào giỏ hàng.
+  //   // Bạn có thể gọi một hàm từ context hoặc redux để quản lý giỏ hàng.
+  //   console.log(`Added ${quantity} of ${product.name} to cart abc`);
+  //   console.log(product);
+  // };
 
   return (
     <div className="group p-4 border rounded-lg shadow-md bg-white">
@@ -60,7 +62,7 @@ const ProductItem = ({ product }) => {
 
       {/* Add to Cart Button */}
       <button
-        onClick={addToCart}
+        onClick={addToCart(product._id)}
         className="mt-4 px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700"
       >
         Add to Cart

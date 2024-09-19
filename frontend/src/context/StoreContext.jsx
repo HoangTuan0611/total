@@ -4,11 +4,27 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
   const url = `http://localhost:4000/`;
+  const urlProduct = `http://localhost:4000/api/product/`;
   const [token, setToken] = useState("");
-
-  const food_list = [];
-
+  const [listProduct, setListProduct] = useState([]);
   const [cartItems, setCartItems] = useState({});
+
+  useEffect(() => {
+    getListProducts();
+  }, []);
+
+  const getListProducts = async () => {
+    try {
+      const url = urlProduct + `list`;
+      const response = await axios.get(url);
+      setListProduct((prevProducts) => [
+        ...prevProducts,
+        ...response.data.data,
+      ]);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   const addToCart = (itemId) => {
     if (!cartItems[itemId]) {
@@ -41,9 +57,10 @@ const StoreContextProvider = (props) => {
 
   const contextValue = {
     url,
+    urlProduct,
     token,
     setToken,
-    food_list,
+    listProduct,
     cartItems,
     setCartItems,
     addToCart,
