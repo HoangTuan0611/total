@@ -1,15 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../../../context/StoreContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const Header = ({ setAuthMode, setShowPopup }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [userAvatarUrl, setUserAvatarUrl] = useState("");
 
-  const { token, setToken } = useContext(StoreContext)
+  const { token, setToken, getTotalCartAmount } = useContext(StoreContext);
 
   const handleLogout = () => {
-    setToken('')
-    localStorage.removeItem('token');
+    setToken("");
+    localStorage.removeItem("token");
     setShowDropdown(false);
   };
 
@@ -37,13 +40,13 @@ const Header = ({ setAuthMode, setShowPopup }) => {
 
       {/* Icons (Search, Cart, Sign In) */}
       <div className="flex items-center space-x-6">
-        {/* <button className="text-gray-700 hover:text-red-600">
-          <i className="fas fa-search"></i>
-        </button>
         <button className="text-gray-700 hover:text-red-600 relative">
+          <Link to="/cart">
+            <FontAwesomeIcon icon={faCartShopping} />
+          </Link>
           <i className="fas fa-shopping-cart"></i>
-          <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-600"></span>
-        </button> */}
+          { getTotalCartAmount() === 0 ? "" : <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-600"></span>}
+        </button>
         {!token ? (
           <button
             onClick={() => {

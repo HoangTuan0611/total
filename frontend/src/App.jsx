@@ -6,6 +6,7 @@ import Footer from "./components/Footer/Footer";
 import LoginPopup from "./components/LoginPopup/LoginPopup";
 import Home from "./pages/Home/Home";
 import Cart from "./pages/Cart/Cart";
+import Header from "./components/Navbar/Header/Header";
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false); // init 1 cái state showLogin, setShowLogin là 1 hàm set lại state cho showLogin

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 
 export const StoreContext = createContext(null);
@@ -13,10 +14,20 @@ const StoreContextProvider = (props) => {
     getListProducts();
   }, []);
 
+  useEffect(() => {
+    console.log(cartItems);
+  }, [cartItems]);
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setToken(localStorage.getItem("token"));
+    }
+  }, []);
+
   const getListProducts = async () => {
     try {
-      const url = urlProduct + `list`;
-      const response = await axios.get(url);
+      const newUrl = urlProduct + `list`;
+      const response = await axios.get(newUrl);
       setListProduct((prevProducts) => [
         ...prevProducts,
         ...response.data.data,
@@ -27,6 +38,7 @@ const StoreContextProvider = (props) => {
   };
 
   const addToCart = (itemId) => {
+    console.log(itemId);    
     if (!cartItems[itemId]) {
       setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
     } else {
@@ -42,18 +54,12 @@ const StoreContextProvider = (props) => {
     let totalAmount = 0;
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
-        let itemInfo = food_list.find((product) => product._id === item);
+        let itemInfo = listProduct.find((product) => product._id === item);
         totalAmount += itemInfo.price * cartItems[item];
       }
     }
     return totalAmount;
   };
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      setToken(localStorage.getItem("token"));
-    }
-  }, []);
 
   const contextValue = {
     url,

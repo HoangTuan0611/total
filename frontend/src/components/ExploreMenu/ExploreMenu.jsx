@@ -1,28 +1,27 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import "./ExploreMenu.css";
-import { StoreContext } from "../../context/StoreContext";
+
 const ExploreMenu = () => {
   const [category, setCategory] = useState();
-  const { url, urlProduct} = useContext(StoreContext)
 
   useEffect(() => {
     getCategory();
   }, []);
 
+  console.log('123');
+
   const getCategory = async () => {
-    const url = urlProduct + `listcategory`;
-    const response = await axios.get(url);
-   
+    const newUrl = `http://localhost:4000/api/product/listcategory`;
+    const response = await axios.get(newUrl);
+
     setCategory(response.data.data);
   };
-
-  console.log(category);
 
   const showSubCategory = async (id) => {
     try {
       const response = await axios.get(
-        urlProduct + `subcategory/${id}`
+        `http://localhost:4000/api/product/subcategory/${id}`
       );
 
       if (response.data.success) {

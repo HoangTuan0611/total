@@ -2,29 +2,31 @@ import React, { useContext, useState } from "react";
 import { StoreContext } from "../../context/StoreContext";
 
 const ProductItem = ({ product }) => {
-  const [quantity, setQuantity] = useState(1);
-  const { addToCart } = useContext(StoreContext)
-  
-  // Xử lý tăng số lượng
-  const increaseQuantity = () =>
-    setQuantity((prevQuantity) => prevQuantity + 1);
+  const [quantity, setQuantity] = useState(0); // Start with 0 quantity
+  const { addToCart, removeFromCart } = useContext(StoreContext);
 
-  // Xử lý giảm số lượng
-  const decreaseQuantity = () => {
-    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+  // Increase quantity and add to cart
+  const increaseQuantity = () => {
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    addToCart(product._id); // Add product to cart when clicked
   };
 
-  // Xử lý thêm vào giỏ hàng
-  // const addToCart = () => {
-  //   // Đây là nơi bạn sẽ xử lý việc thêm sản phẩm vào giỏ hàng.
-  //   // Bạn có thể gọi một hàm từ context hoặc redux để quản lý giỏ hàng.
-  //   console.log(`Added ${quantity} of ${product.name} to cart abc`);
-  //   console.log(product);
-  // };
+  // Decrease quantity and remove from cart
+  const decreaseQuantity = () => {
+    if (quantity > 0) {
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+      if (newQuantity === 0) {
+        removeFromCart(product._id); // Remove from cart when quantity reaches 0
+      }
+    }
+  };
 
   return (
-    <div className="group p-4 border rounded-lg shadow-md bg-white">
-      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+    <div className="p-4 border rounded-lg shadow-md bg-white group">
+      {/* Product Image */}
+      <div className="relative">
         <img
           src={
             product.image != null
@@ -32,41 +34,62 @@ const ProductItem = ({ product }) => {
               : "http://localhost:4000/images/default_product.jpg"
           }
           alt={product.name}
-          className="h-full w-full object-cover object-center group-hover:opacity-75"
+          className="h-40 w-full object-cover rounded-lg"
         />
-      </div>
-      <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
-      <p className="mt-1 text-lg font-medium text-gray-900">{product.price}</p>
 
-      {/* Quantity Controls */}
-      <div className="flex items-center mt-4">
-        <button
-          onClick={decreaseQuantity}
-          className="px-3 py-1 border border-gray-300 rounded-l-md bg-gray-200 text-gray-700 hover:bg-gray-300"
-        >
-          -
-        </button>
-        <input
-          type="text"
-          value={quantity}
-          readOnly
-          className="w-12 text-center border-t border-b border-gray-300 bg-gray-100"
-        />
-        <button
-          onClick={increaseQuantity}
-          className="px-3 py-1 border border-gray-300 rounded-r-md bg-gray-200 text-gray-700 hover:bg-gray-300"
-        >
-          +
-        </button>
+        {/* Quantity Controls */}
+        <div className="absolute top-2 right-2 flex items-center space-x-2">
+          {quantity > 0 ? (
+            <>
+              <button
+                onClick={decreaseQuantity}
+                className="bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+              >
+                -
+              </button>
+              <span className="text-center text-white font-medium">{quantity}</span>
+              <button
+                onClick={increaseQuantity}
+                className="bg-green-500 text-white rounded-full p-1 hover:bg-green-600"
+              >
+                +
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={increaseQuantity}
+              className="bg-green-500 text-white rounded-full p-2 hover:bg-green-600"
+            >
+              +
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Add to Cart Button */}
-      <button
-        onClick={addToCart(product._id)}
-        className="mt-4 px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+      {/* Product Details */}
+      <div className="mt-4">
+        <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
+        <p className="text-sm text-gray-500 mt-1">
+          {product.description ||
+            "Food provides essential nutrients for overall health and well-being"}
+        </p>
+        <div className="flex items-center justify-between mt-2">
+          {/* Rating (dummy rating for now) */}
+          <div className="flex items-center">
+            <span className="text-yellow-500">★★★★☆</span>
+          </div>
+          {/* Price */}
+          <p className="text-lg font-bold text-red-600">${product.price}</p>
+        </div>
+      </div>
+
+      {/* Add to Cart Button (hidden for now since it uses + button) */}
+      {/* <button
+        onClick={() => addToCart(product._id)}
+        className="mt-4 w-full bg-red-600 text-white py-2 rounded-full hover:bg-red-700 transition-colors"
       >
         Add to Cart
-      </button>
+      </button> */}
     </div>
   );
 };

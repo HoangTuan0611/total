@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import ProductItem from "../ProductItem/Productitem";
 import { StoreContext } from "../../context/StoreContext";
+import ProductItem from "../ProductItem/ProductItem";
 
 const ProductList = () => {
   const [listProduct, setListProduct] = useState([]);
