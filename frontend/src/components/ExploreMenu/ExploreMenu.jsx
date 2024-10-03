@@ -9,8 +9,6 @@ const ExploreMenu = () => {
     getCategory();
   }, []);
 
-  console.log('123');
-
   const getCategory = async () => {
     const newUrl = `http://localhost:4000/api/product/listcategory`;
     const response = await axios.get(newUrl);

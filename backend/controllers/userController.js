@@ -58,11 +58,13 @@ const registerUser = async (req, res) => {
       name: name,
       email: email,
       password: hashedPassword,
+      cartData: {},
     });
 
     const user = await newUser.save();
+    console.log("Saved user:", user);
     const token = createToken(user._id);
-    res.json({ success: true, message: "User registered successfully", token });
+    res.json({ success: true, message: "User registered successfully", token, user });
   } catch (err) {
     console.log(err);
     res.json({ success: false, message: "Server error" });

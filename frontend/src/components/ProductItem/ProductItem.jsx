@@ -1,9 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../../context/StoreContext";
 
 const ProductItem = ({ product }) => {
+  const { addToCart, removeFromCart, cartItems } = useContext(StoreContext);
   const [quantity, setQuantity] = useState(0); // Start with 0 quantity
-  const { addToCart, removeFromCart } = useContext(StoreContext);
+
+  useEffect(() => {
+    // Set initial quantity based on cartData
+    if (cartItems && cartItems[product._id] !== undefined) {
+      setQuantity(cartItems[product._id]);
+    }
+  }, [cartItems, product._id]);
 
   // Increase quantity and add to cart
   const increaseQuantity = () => {
@@ -17,9 +24,7 @@ const ProductItem = ({ product }) => {
     if (quantity > 0) {
       const newQuantity = quantity - 1;
       setQuantity(newQuantity);
-      if (newQuantity === 0) {
-        removeFromCart(product._id); // Remove from cart when quantity reaches 0
-      }
+      removeFromCart(product._id);
     }
   };
 
@@ -82,14 +87,6 @@ const ProductItem = ({ product }) => {
           <p className="text-lg font-bold text-red-600">${product.price}</p>
         </div>
       </div>
-
-      {/* Add to Cart Button (hidden for now since it uses + button) */}
-      {/* <button
-        onClick={() => addToCart(product._id)}
-        className="mt-4 w-full bg-red-600 text-white py-2 rounded-full hover:bg-red-700 transition-colors"
-      >
-        Add to Cart
-      </button> */}
     </div>
   );
 };

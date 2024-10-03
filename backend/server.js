@@ -3,7 +3,9 @@ import cors from "cors"
 import { connectDB } from './config/db.js'
 import productRouter from './routes/productRouter.js'
 import userRouter from './routes/userRouter.js'
+import cartRouter from './routes/cartRouter.js'
 import 'dotenv/config';
+import orderRouter from './routes/orderRouter.js'
 
 // app config
 const app = express()
@@ -22,6 +24,12 @@ app.use("/images",express.static('uploads'))
 
 //api endpoints for user
 app.use("/api/user", userRouter)
+
+//api endpoints for cart
+app.use("/api/cart", cartRouter)
+
+//api endpoints for cart
+app.use("/api/order", orderRouter)
 
 app.get("/",(req,res)=>{
     res.send("API Working")
