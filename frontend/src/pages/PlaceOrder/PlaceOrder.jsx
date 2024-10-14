@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { StoreContext } from "../../context/StoreContext";
+import axios from "axios";
 
 const PlaceOrder = () => {
   const [deliveryInfo, setDeliveryInfo] = useState({
@@ -36,10 +37,12 @@ const PlaceOrder = () => {
 
     let orderData = {
       address: deliveryInfo,
-      item: orderItem,
+      items: orderItem,
       amount: getTotalCartAmount() + 2,
     }
     console.log("orderData", orderData);
+    const response = await axios.post(`http://localhost:4000/api/order/place`, orderData, {headers: {token}})
+    console.log(response);
   };
 
   return (
