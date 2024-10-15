@@ -1,19 +1,11 @@
 import React, { useState } from "react";
-import "./Sidebar.css";
-import { assets } from "../../assets/assets";
-import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette } from "@fortawesome/free-solid-svg-icons";
+import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
-  // State để theo dõi tab nào được chọn
-  const [selectedTab, setSelectedTab] = useState("Add Product");
-  // State để chuyển đổi màu sidebar giữa đen và trắng
+  // State to toggle sidebar color between dark and light mode
   const [isDarkMode, setIsDarkMode] = useState(true);
-
-  const handleTabClick = (tab) => {
-    // setSelectedTab(tab);
-  };
 
   const toggleSidebarColor = () => {
     setIsDarkMode(!isDarkMode);
@@ -32,50 +24,67 @@ const Sidebar = () => {
           <span className="text-xl font-semibold">Logo</span>
         </div>
 
-        {/* Nút chuyển đổi màu sidebar */}
-          <FontAwesomeIcon  onClick={toggleSidebarColor} icon={faPalette} /> 
+        {/* Sidebar Color Toggle Button */}
+        <div className="flex justify-center mt-4">
+          <FontAwesomeIcon
+            icon={faPalette}
+            onClick={toggleSidebarColor}
+            className="cursor-pointer"
+          />
+        </div>
 
         {/* Menu Items */}
         <nav className="mt-10">
-          <a
-            href="/add"
-            onClick={() => handleTabClick("Add Product")}
-            className={`flex items-center px-4 py-2 mt-5 ${
-              selectedTab === "Add Product"
-                ? isDarkMode
-                  ? "bg-gray-700 text-white"
-                  : "bg-gray-300 text-black"
-                : "text-gray-300 hover:bg-gray-700 hover:text-white"
-            }`}
+          <NavLink
+            to="/add"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-2 mt-5 ${
+                isActive
+                  ? isDarkMode
+                    ? "bg-gray-700 text-white"
+                    : "bg-gray-300 text-black"
+                  : isDarkMode
+                  ? "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  : "text-black hover:bg-gray-300"
+              }`
+            }
           >
             <span className="mx-4">Add Product</span>
-          </a>
-          <a
-            href="/list"
-            onClick={() => handleTabClick("List Product")}
-            className={`flex items-center px-4 py-2 mt-5 ${
-              selectedTab === "List Product"
-                ? isDarkMode
-                  ? "bg-gray-700 text-white"
-                  : "bg-gray-300 text-black"
-                : "text-gray-300 hover:bg-gray-700 hover:text-white"
-            }`}
+          </NavLink>
+
+          <NavLink
+            to="/list"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-2 mt-5 ${
+                isActive
+                  ? isDarkMode
+                    ? "bg-gray-700 text-white"
+                    : "bg-gray-300 text-black"
+                  : isDarkMode
+                  ? "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  : "text-black hover:bg-gray-300"
+              }`
+            }
           >
             <span className="mx-4">List Product</span>
-          </a>
-          <a
-            href="/order"
-            onClick={() => handleTabClick("All Orders")}
-            className={`flex items-center px-4 py-2 mt-5 ${
-              selectedTab === "All Orders"
-                ? isDarkMode
-                  ? "bg-gray-700 text-white"
-                  : "bg-gray-300 text-black"
-                : "text-gray-300 hover:bg-gray-700 hover:text-white"
-            }`}
+          </NavLink>
+
+          <NavLink
+            to="/order"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-2 mt-5 ${
+                isActive
+                  ? isDarkMode
+                    ? "bg-gray-700 text-white"
+                    : "bg-gray-300 text-black"
+                  : isDarkMode
+                  ? "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  : "text-black hover:bg-gray-300"
+              }`
+            }
           >
             <span className="mx-4">All Orders</span>
-          </a>
+          </NavLink>
         </nav>
       </div>
     </div>

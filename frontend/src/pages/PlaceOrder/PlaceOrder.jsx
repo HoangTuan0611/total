@@ -1,8 +1,11 @@
 import React, { useContext, useState } from "react";
 import { StoreContext } from "../../context/StoreContext";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom'
 
 const PlaceOrder = () => {
+  const navigate = useNavigate();
   const [deliveryInfo, setDeliveryInfo] = useState({
     firstName: "",
     lastName: "",
@@ -43,6 +46,13 @@ const PlaceOrder = () => {
     console.log("orderData", orderData);
     const response = await axios.post(`http://localhost:4000/api/order/place`, orderData, {headers: {token}})
     console.log(response);
+    if(response.data.success) {
+      toast.success(response.data.message);
+      navigate('/myorders')
+      // Router to userorders page here
+    } else {
+      toast.error(response.data.message);
+    }
   };
 
   return (

@@ -3,11 +3,12 @@ import { StoreContext } from "../../../context/StoreContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 
 const Header = ({ setAuthMode, setShowPopup }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [userAvatarUrl, setUserAvatarUrl] = useState("");
-
+  const navigate = useNavigate();
   const { token, setToken, getTotalCartAmount } = useContext(StoreContext);
 
   const handleLogout = () => {
@@ -75,8 +76,8 @@ const Header = ({ setAuthMode, setShowPopup }) => {
             {showDropdown && (
               <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
                 <ul className="py-1">
-                  <li className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
-                    Profile
+                  <li onClick={()=> navigate('/myorders')} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                    Orders
                   </li>
                   <li className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
                     Settings

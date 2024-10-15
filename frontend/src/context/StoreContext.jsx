@@ -78,8 +78,7 @@ const StoreContextProvider = (props) => {
     setCartItems(response.data.data);
   };
 
-  console.log(listProduct);
-  console.log(cartItems);
+  console.log('token', token);
 
   const contextValue = {
     url,
