@@ -5,6 +5,7 @@ import {
   removeProduct,
   listCategory,
   listSubcategoryByCategory,
+  getProduct,
 } from "../controllers/productController.js";
 
 import multer from "multer";
@@ -27,5 +28,6 @@ productRouter.get("/list", listProduct);
 productRouter.get("/listcategory", listCategory);
 productRouter.get("/subcategory/:category", listSubcategoryByCategory);
 productRouter.delete("/remove/:id", removeProduct);
+productRouter.get("/detail/:id", getProduct);
 
 export default productRouter;

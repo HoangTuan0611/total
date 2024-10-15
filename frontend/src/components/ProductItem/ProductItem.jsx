@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../../context/StoreContext";
+import { useNavigate } from "react-router-dom";
 
 const ProductItem = ({ product }) => {
   const { addToCart, removeFromCart, cartItems } = useContext(StoreContext);
   const [quantity, setQuantity] = useState(0); // Start with 0 quantity
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Set initial quantity based on cartData
@@ -13,14 +15,16 @@ const ProductItem = ({ product }) => {
   }, [cartItems, product._id]);
 
   // Increase quantity and add to cart
-  const increaseQuantity = () => {
+  const increaseQuantity = (e) => {
+    e.stopPropagation();
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
     addToCart(product._id); // Add product to cart when clicked
   };
 
   // Decrease quantity and remove from cart
-  const decreaseQuantity = () => {
+  const decreaseQuantity = (e) => {
+    e.stopPropagation();
     if (quantity > 0) {
       const newQuantity = quantity - 1;
       setQuantity(newQuantity);
@@ -28,8 +32,13 @@ const ProductItem = ({ product }) => {
     }
   };
 
+  const handleProductClick = () => {
+    navigate(`/product/${product._id}`); // Navigate to ProductDetail with the product ID
+  };
+
   return (
-    <div className="p-4 border rounded-lg shadow-md bg-white group">
+    <div className="p-4 border rounded-lg shadow-md bg-white group cursor-pointer"
+    onClick={handleProductClick}>
       {/* Product Image */}
       <div className="relative">
         <img
