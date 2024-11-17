@@ -15,7 +15,10 @@ const MyOrders = () => {
             {},
             { headers: { token } }
           );
-          setData(response.data.data);
+          if(response.data.success) {
+            const sortedOrders = response.data.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            setData(sortedOrders);
+          }
         } catch (error) {
           console.error("Error fetching orders:", error);
         }
@@ -24,6 +27,10 @@ const MyOrders = () => {
       fetchOrders();
     }
   }, [token, url]);
+
+  const handleCancel = () => {
+    alert('Cancelled')
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -98,7 +105,7 @@ const MyOrders = () => {
               <td className="px-4 py-2 text-center">
                 {order.status != 3 ? (
                   <div className="relative group inline-block">
-                    <button className="bg-blue-200 hover:bg-blue-300 text-grey-700 font-semibold py-2 px-4 rounded-md">
+                    <button onClick={handleCancel} className="bg-blue-200 hover:bg-blue-300 text-grey-700 font-semibold py-2 px-4 rounded-md">
                       Cancel Order
                     </button>
                     <div className="absolute left-1/2 -translate-x-1/2 -top-16 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-2 px-4 z-10 whitespace-nowrap shadow-lg">

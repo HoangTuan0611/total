@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import "./ExploreMenu.css";
+import { Link } from "react-router-dom";
 
 const ExploreMenu = () => {
   const [category, setCategory] = useState();
@@ -12,8 +13,9 @@ const ExploreMenu = () => {
   const getCategory = async () => {
     const newUrl = `http://localhost:4000/api/product/listcategory`;
     const response = await axios.get(newUrl);
-
-    setCategory(response.data.data);
+    if(response.data.success) {
+      setCategory(['dtdd','laptop'])
+    }
   };
 
   const showSubCategory = async (id) => {
@@ -69,20 +71,21 @@ const ExploreMenu = () => {
           Browse through our various categories to find the perfect smartphone
           that suits your needs.
         </p>
-        {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-4">
           {category?.map((cat) => (
             <div className="flex flex-col items-center bg-white p-4 rounded-lg">
-              <img
-                src="http://localhost:4000/images/default_product.jpg"
-                className="w-32 h-32 object-cover rounded-full mb-4"
-              />
-              <h3 className="text-xl font-semibold text-gray-700">
-                {cat == 0 ? "Điện thoại" : "Laptop"}
+              <Link to={`/${cat}`}>
+                <img
+                  src="http://localhost:4000/images/default_product.jpg"
+                  className="w-16 h-16 object-cover rounded-full mb-4"
+                />
+                <h3 className="text-md font-semibold text-gray-700">
+                {cat == 'dtdd' ? "Điện thoại" : "Laptop"}
               </h3>
-              <button onClick={() => showSubCategory(cat)}>Show</button>
+              </Link>
             </div>
           ))}
-        </div> */}
+        </div>
       </section>
     </div>
   );

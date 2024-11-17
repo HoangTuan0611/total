@@ -22,7 +22,7 @@ const placeOrder = async (req, res) => {
         country: address.country,
         phone: address.phone,
       },
-      status: "Food processing",
+      status: "1",
       date: new Date().toISOString(), // Set the current date
       payment: 0, // Set the default payment status as unpaid
     });

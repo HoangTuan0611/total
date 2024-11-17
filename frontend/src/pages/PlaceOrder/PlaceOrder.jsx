@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { StoreContext } from "../../context/StoreContext";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 const PlaceOrder = () => {
   const navigate = useNavigate();
@@ -26,32 +26,43 @@ const PlaceOrder = () => {
     setDeliveryInfo((prev) => ({ ...prev, [name]: value }));
   };
 
+  const validateDeliveryInfo = () => {
+    return Object.values(deliveryInfo).every((value) => value.trim() !== "");
+  };
+
   const placeOrder = async (e) => {
     e.preventDefault();
-    console.log(deliveryInfo);
-    let orderItem = [];
-    listProduct.map((item) => {
-      if (cartItems[item._id] > 0) {
-        let itemInfo = item;
-        itemInfo["quantity"] = cartItems[item._id];
-        orderItem.push(itemInfo);
-      }
-    });
+    if (validateDeliveryInfo()) {
+      let orderItem = [];
+      listProduct.map((item) => {
+        if (cartItems[item._id] > 0) {
+          let itemInfo = item;
+          itemInfo["quantity"] = cartItems[item._id];
+          orderItem.push(itemInfo);
+        }
+      });
 
-    let orderData = {
-      address: deliveryInfo,
-      items: orderItem,
-      amount: getTotalCartAmount() + 2,
-    }
-    console.log("orderData", orderData);
-    const response = await axios.post(`http://localhost:4000/api/order/place`, orderData, {headers: {token}})
-    console.log(response);
-    if(response.data.success) {
-      toast.success(response.data.message);
-      navigate('/myorders')
-      // Router to userorders page here
+      let orderData = {
+        address: deliveryInfo,
+        items: orderItem,
+        amount: getTotalCartAmount() + 2,
+      };
+      const response = await axios.post(
+        `http://localhost:4000/api/order/place`,
+        orderData,
+        { headers: { token } }
+      );
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setTimeout(() => {
+          navigate("/myorders");
+        }, 2000);
+      } else {
+        toast.error(response.data.message);
+      }
     } else {
-      toast.error(response.data.message);
+      console.log("error");
+      toast.error("Pease fullfill the information before order");
     }
   };
 
@@ -140,22 +151,42 @@ const PlaceOrder = () => {
             </div>
           </div>
 
-          {/* Cart Totals */}
           <div>
             <h2 className="text-2xl font-semibold mb-4">Cart Totals</h2>
             <div className="border rounded-md p-6 bg-gray-50">
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>{getTotalCartAmount()}</span>
+                  <span>
+                    {getTotalCartAmount()
+                      ? new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(getTotalCartAmount())
+                      : "N/A"}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Delivery Fee</span>
-                  <span>{1000}</span>
+                  <span>
+                    {30000
+                      ? new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(30000)
+                      : "N/A"}
+                  </span>
                 </div>
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total</span>
-                  <span>{getTotalCartAmount() + 1000}</span>
+                  <span>
+                    {getTotalCartAmount() + 30000
+                      ? new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(getTotalCartAmount() + 30000)
+                      : "N/A"}
+                  </span>
                 </div>
               </div>
               <button

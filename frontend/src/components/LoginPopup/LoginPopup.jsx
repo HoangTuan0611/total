@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { StoreContext } from "../../context/StoreContext";
 
@@ -91,12 +91,12 @@ const AuthPopup = ({ mode, setShowPopup }) => {
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:outline-none focus:ring focus:border-blue-300"
             />
           </div>
-          <div className="mb-4 flex items-center">
+          {/* <div className="mb-4 flex items-center">
             <input type="checkbox" className="mr-2" />
             <span className="text-sm text-gray-600">
               By continuing, I agree to the terms of use & privacy policy.
             </span>
-          </div>
+          </div> */}
           <button
             type="submit"
             className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600"

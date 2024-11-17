@@ -9,12 +9,12 @@ import Add from "./commponents/pages/Add/Add";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import User from "./commponents/pages/Users/User";
 
 const App = () => {
   return (
     <div>
       <ToastContainer/>
-      {/* <Navbar /> */}
       <hr />
       <div className="app-content">
         <Sidebar />
@@ -22,6 +22,7 @@ const App = () => {
           <Route path="/add" element={<Add />} />
           <Route path="/list" element={<List />} />
           <Route path="/order" element={<Orders />} />
+          <Route path="/users" element={<User />} />
         </Routes>
       </div>
     </div>

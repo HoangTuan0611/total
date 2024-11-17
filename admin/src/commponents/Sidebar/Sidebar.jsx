@@ -85,6 +85,23 @@ const Sidebar = () => {
           >
             <span className="mx-4">All Orders</span>
           </NavLink>
+
+          <NavLink
+            to="/users"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-2 mt-5 ${
+                isActive
+                  ? isDarkMode
+                    ? "bg-gray-700 text-white"
+                    : "bg-gray-300 text-black"
+                  : isDarkMode
+                  ? "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  : "text-black hover:bg-gray-300"
+              }`
+            }
+          >
+            <span className="mx-4">All Users</span>
+          </NavLink>
         </nav>
       </div>
     </div>

@@ -28,7 +28,7 @@ const Cart = () => {
           </thead>
           <tbody>
             {listProduct.map((item) => {
-              if (cartItems[item._id] > 0) {
+              if (cartItems[item?._id] > 0) {
                 return (
                   <tr key={item.id}>
                     <td className="px-4 py-4">
@@ -84,15 +84,36 @@ const Cart = () => {
           <div className="space-y-2">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>{getTotalCartAmount()}</span>
+              <span>
+                {getTotalCartAmount()
+                  ? new Intl.NumberFormat("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    }).format(getTotalCartAmount())
+                  : "N/A"}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Delivery Fee</span>
-              <span>{1000}</span>
+              <span>
+                {30000
+                  ? new Intl.NumberFormat("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    }).format(30000)
+                  : "N/A"}
+              </span>
             </div>
             <div className="flex justify-between font-bold text-lg">
               <span>Total</span>
-              <span>{getTotalCartAmount() + 1000}</span>
+              <span>
+                {getTotalCartAmount() + 30000
+                  ? new Intl.NumberFormat("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    }).format(getTotalCartAmount() + 30000)
+                  : "N/A"}
+              </span>
             </div>
           </div>
           <Link to="/order">
